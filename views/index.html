@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jira Smart Analytics & Task Working Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --border-color: #e2e8f0;
+      --border-focus: #3b82f6;
+
+      --text-main: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
+
+      --navy-primary: #1e3a8a;
+      --navy-dark: #0f172a;
+      --navy-light: #eff6ff;
+      --navy-border: #bfdbfe;
+
+      --blue-accent: #2563eb;
+      --blue-pastel: #dbeafe;
+
+      --emerald-accent: #059669;
+      --emerald-pastel: #d1fae5;
+      --emerald-text: #065f46;
+
+      --amber-accent: #d97706;
+      --amber-pastel: #fef3c7;
+      --amber-text: #92400e;
+
+      --purple-accent: #7c3aed;
+      --purple-pastel: #ede9fe;
+
+      --rose-accent: #e11d48;
+      --rose-pastel: #ffe4e6;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Navigation Bar */
+    .navbar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--navy-primary);
+      color: white;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .brand-text h1 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--navy-primary);
+    }
+
+    .brand-text span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--bg-subtle);
+      padding: 0.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .nav-tab-btn {
+      border: none;
+      background: transparent;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.15s ease;
+    }
+
+    .nav-tab-btn:hover {
+      color: var(--navy-primary);
+    }
+
+    .nav-tab-btn.active {
+      background: var(--bg-surface);
+      color: var(--navy-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-tab-btn .badge-count {
+      background: var(--navy-primary);
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: var(--radius-sm);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .user-profile-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: all 0.15s ease;
+    }
+
+    .user-profile-btn:hover {
+      background: var(--navy-light);
+      border-color: var(--navy-border);
+    }
+
+    .user-avatar-sm {
+      width: 26px;
+      height: 26px;
+      border-radius: var(--radius-sm);
+      background: var(--navy-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--navy-primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #1e40af;
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface);
+      border-color: var(--border-color);
+      color: var(--text-secondary);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-subtle);
+      color: var(--text-main);
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.78rem;
+    }
+
+    /* Main Container */
+    .main-container {
+      max-width: 1440px;
+      margin: 1.75rem auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Page Header */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .page-title h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--navy-dark);
+    }
+
+    .page-title p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 0.15rem;
+    }
+
+    /* Stat Cards */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--navy-primary));
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+
+    .stat-card-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.35rem;
+    }
+
+    .stat-card-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--navy-dark);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+
+    .stat-card-value span {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .stat-card-meta {
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Control / Filter Bar */
+    .filter-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .filter-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .filter-select, .filter-input {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 0.8rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-family: inherit;
+      color: var(--text-main);
+      outline: none;
+      min-width: 140px;
+    }
+
+    .filter-select:focus, .filter-input:focus {
+      border-color: var(--border-focus);
+      background: var(--bg-surface);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    /* Grid Layouts */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 1080px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Card Panels */
+    .panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafafa;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--navy-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .panel-body {
+      padding: 1.25rem;
+    }
+
+    /* Table Styles */
+    .table-responsive {
+      overflow-x: auto;
+      max-height: 600px;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.84rem;
+    }
+
+    table.data-table th {
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    table.data-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+
+    table.data-table tr:hover td {
+      background: var(--navy-light);
+    }
+
+    /* Badges & Tags */
+    .badge-ticket {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      background: var(--navy-light);
+      border: 1px solid var(--navy-border);
+      color: var(--navy-primary);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.15s ease;
+    }
+
+    .badge-ticket:hover {
+      background: var(--navy-primary);
+      color: white;
+      border-color: var(--navy-primary);
+    }
+
+    .badge-billable {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-sm);
+      background: var(--emerald-pastel);
+      color: var(--emerald-text);
+      border: 1px solid #a7f3d0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .badge-logged {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      display: inline-flex;
+    }
+
+    .badge-status {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .status-in-progress { background: #dbeafe; color: #1e40af; }
+    .status-open { background: #e0e7ff; color: #3730a3; }
+    .status-done { background: #d1fae5; color: #065f46; }
+    .status-resolved { background: #dcfce7; color: #15803d; }
+    .status-review { background: #fef3c7; color: #92400e; }
+    .status-reopened { background: #ffe4e6; color: #9f1239; }
+
+    .badge-priority {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .prio-high { background: #fee2e2; color: #991b1b; }
+    .prio-medium { background: #fef3c7; color: #92400e; }
+    .prio-low { background: #f1f5f9; color: #475569; }
+
+    /* Task Card in Task Working View */
+    .task-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1rem;
+    }
+
+    .task-item-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.25rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .task-item-card:hover {
+      border-color: var(--navy-border);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .task-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .task-card-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--navy-dark);
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .task-card-project {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .task-card-footer {
+      border-top: 1px solid var(--border-color);
+      padding-top: 0.75rem;
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Simple Bar Chart */
+    .chart-container {
+      padding: 1rem 0;
+    }
+
+    .bar-group {
+      margin-bottom: 0.9rem;
+    }
+
+    .bar-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--text-secondary);
+    }
+
+    .bar-track {
+      height: 10px;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      display: flex;
+      border: 1px solid var(--border-color);
+    }
+
+    .bar-fill-billable {
+      background: var(--emerald-accent);
+      height: 100%;
+    }
+
+    .bar-fill-logged {
+      background: var(--navy-primary);
+      height: 100%;
+    }
+
+    /* Modal Backdrop */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 480px;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--navy-dark);
+    }
+
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 0.35rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.88rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background: var(--bg-subtle);
+      color: var(--text-main);
+      outline: none;
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      border-color: var(--border-focus);
+      background: var(--bg-surface);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    }
+
+    .tab-content-panel {
+      display: none;
+    }
+
+    .tab-content-panel.active {
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="#" class="brand-logo">
+      <div class="brand-icon">J</div>
+      <div class="brand-text">
+        <h1>Jira Analytics Pro</h1>
+        <span>Smart Billable & Task Hub</span>
+      </div>
+    </a>
+
+    <div class="nav-tabs">
+      <button class="nav-tab-btn active" onclick="switchTab('analyticsTab', this)">
+        <span>📊</span> Phân Tích Billable & Số Liệu
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('tasksTab', this)">
+        <span>🚀</span> Task Working
+        <span class="badge-count" id="navWorkingCount">0</span>
+      </button>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn btn-secondary btn-sm" onclick="syncLiveJiraData()" title="Làm mới dữ liệu từ Jira">
+        <span>🔄</span> Đồng bộ Live
+      </button>
+
+      <div class="user-profile-btn" onclick="openLoginModal()" title="Nhấn để đổi tài khoản hoặc cập nhật Token">
+        <div class="user-avatar-sm" id="userAvatarText">U</div>
+        <div>
+          <div style="font-size: 0.82rem; line-height: 1.2;" id="userDisplayName">Đang tải...</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 500;" id="userDomainText">jira.yourcompany.com</div>
+        </div>
+        <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.25rem;">🔑</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Container -->
+<main class="main-container">
+
+  <!-- ==================== TAB 1: SMART ANALYTICS & BILLABLE ==================== -->
+  <div id="analyticsTab" class="tab-content-panel active">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="page-title">
+        <h2>Báo Cáo & Phân Tích Billable Hours</h2>
+        <p>Thống kê chính xác số giờ tính phí (<code>customfield_12200</code>) đối soát với Actual Logged Hours</p>
+      </div>
+      <div>
+        <button class="btn btn-secondary btn-sm" onclick="exportDataJSON()">📥 Xuất JSON</button>
+      </div>
+    </div>
+
+    <!-- Stat Cards Row -->
+    <div class="stats-row">
+      <div class="stat-card" style="--card-accent: var(--emerald-accent);">
+        <div class="stat-card-label">
+          <span>💵 Tổng Billable Thực Nhận</span>
+          <span style="color: var(--emerald-accent);">Official</span>
+        </div>
+        <div class="stat-card-value">
+          <span id="statTotalBillable">0</span> <span>giờ</span>
+        </div>
+        <div class="stat-card-meta" style="color: var(--emerald-text);">
+          <span>🏆 Ghi nhận theo trường <code>Billable Hrs</code></span>
+        </div>
+      </div>
+
+      <div class="stat-card" style="--card-accent: var(--navy-primary);">
+        <div class="stat-card-label">
+          <span>⏱️ Tổng Giờ Thực Tế Đã Log</span>
+          <span>Actual</span>
+        </div>
+        <div class="stat-card-value">
+          <span id="statTotalLogged">0</span> <span>giờ</span>
+        </div>
+        <div class="stat-card-meta" style="color: var(--text-muted);">
+          <span>📦 <span id="statTaskCount">0</span> tasks có phát sinh giờ</span>
+        </div>
+      </div>
+
+      <div class="stat-card" style="--card-accent: var(--amber-accent);">
+        <div class="stat-card-label">
+          <span>⚖️ Chênh Lệch (Bill vs Log)</span>
+          <span id="statDeltaLabel">Delta</span>
+        </div>
+        <div class="stat-card-value" style="color: var(--amber-accent);">
+          <span id="statDeltaValue">0</span> <span>giờ</span>
+        </div>
+        <div class="stat-card-meta" style="color: var(--amber-text);" id="statEfficiencyRate">
+          <span>Tỷ lệ thu hồi: 100%</span>
+        </div>
+      </div>
+
+      <div class="stat-card" style="--card-accent: var(--purple-accent);">
+        <div class="stat-card-label">
+          <span>🎯 Dự Án Tham Gia</span>
+          <span>Projects</span>
+        </div>
+        <div class="stat-card-value">
+          <span id="statProjectCount">0</span> <span>dự án</span>
+        </div>
+        <div class="stat-card-meta" style="color: var(--purple-accent);">
+          <span>Kỳ gần nhất: <span id="statLatestCycle">2026-08</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-panel">
+      <div class="filter-group">
+        <label class="filter-label">Năm</label>
+        <select id="filterYear" class="filter-select" onchange="applyAnalyticsFilters()">
+          <option value="ALL">Tất cả các năm</option>
+          <option value="2026" selected>Năm 2026</option>
+          <option value="2025">Năm 2025</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Kỳ Billed Date</label>
+        <select id="filterMonth" class="filter-select" onchange="applyAnalyticsFilters()">
+          <option value="ALL">Tất cả các kỳ</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Dự Án</label>
+        <select id="filterProject" class="filter-select" onchange="applyAnalyticsFilters()">
+          <option value="ALL">Tất cả dự án</option>
+        </select>
+      </div>
+
+      <div class="filter-group search-input-wrap">
+        <label class="filter-label">Tìm Kiếm</label>
+        <input type="text" id="filterSearch" class="filter-input" placeholder="Tìm theo mã ticket, tên task..." oninput="applyAnalyticsFilters()">
+      </div>
+    </div>
+
+    <!-- Main Grid: Tables & Breakdown -->
+    <div class="dashboard-grid">
+      <!-- Left: Granular Detail Table -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📋</span> Danh Sách Chi Tiết Đầu Việc & Billable Hours
+          </div>
+          <span style="font-size: 0.8rem; color: var(--text-muted);" id="tableResultCount">0 kết quả</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Ticket</th>
+                <th>Tên Công Việc / Task</th>
+                <th>Kỳ Billed</th>
+                <th>Billable Hrs</th>
+                <th>Logged Hrs</th>
+                <th>Trạng Thái</th>
+              </tr>
+            </thead>
+            <tbody id="billableTableBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right: Summary by Project & Month -->
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <!-- Project Breakdown Card -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>📁</span> Tỷ Trọng Theo Dự Án
+            </div>
+          </div>
+          <div class="panel-body" id="projectBreakdownContainer">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Monthly Trends Card -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>📈</span> Tổng Hợp Theo Kỳ (Tháng)
+            </div>
+          </div>
+          <div class="panel-body" id="monthlyTrendsContainer">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== TAB 2: TASK WORKING ==================== -->
+  <div id="tasksTab" class="tab-content-panel">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="page-title">
+        <h2>Nhiệm Vụ Đang Làm (Task Working)</h2>
+        <p>Toàn bộ các công việc đang được giao trực tiếp cho bạn (Trạng thái chưa Closed/Done)</p>
+      </div>
+      <div>
+        <span class="badge-status status-in-progress" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;" id="activeTasksCountBadge">0 Task đang xử lý</span>
+      </div>
+    </div>
+
+    <!-- Filter Bar for Working Tasks -->
+    <div class="filter-panel">
+      <div class="filter-group">
+        <label class="filter-label">Dự Án</label>
+        <select id="workingFilterProject" class="filter-select" onchange="applyWorkingFilters()">
+          <option value="ALL">Tất cả dự án</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Trạng Thái</label>
+        <select id="workingFilterStatus" class="filter-select" onchange="applyWorkingFilters()">
+          <option value="ALL">Tất cả trạng thái</option>
+          <option value="Open">Open / To Do</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Reopened">Reopened</option>
+        </select>
+      </div>
+
+      <div class="filter-group search-input-wrap">
+        <label class="filter-label">Tìm Kiếm Task</label>
+        <input type="text" id="workingFilterSearch" class="filter-input" placeholder="Tìm kiếm theo mã ticket, tiêu đề task..." oninput="applyWorkingFilters()">
+      </div>
+    </div>
+
+    <!-- Task Cards Grid -->
+    <div class="task-cards-grid" id="workingTasksGrid">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+
+</main>
+
+<!-- Login / Token Modal -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">🔑 Cấu Hình Tài Khoản Jira</div>
+      <button class="btn btn-secondary btn-sm" onclick="closeLoginModal()">✕</button>
+    </div>
+
+    <form id="authForm" onsubmit="handleAuthSubmit(event)">
+      <div class="form-group">
+        <label>Jira Domain URL</label>
+        <input type="text" id="inputDomain" class="form-control" placeholder="https://jira.yourcompany.com" value="https://jira.yourcompany.com" required>
+      </div>
+
+      <div class="form-group">
+        <label>Personal Access Token (PAT / API Key)</label>
+        <input type="password" id="inputToken" class="form-control" placeholder="Nhập mã token Jira cá nhân..." required>
+        <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem; display: block;">
+          Token được lưu an toàn trong trình duyệt (localStorage) của bạn.
+        </span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; gap: 0.75rem; margin-top: 1.5rem;">
+        <button type="button" class="btn btn-secondary" onclick="loadDefaultConfigFile()">
+          📂 Load từ auth.json
+        </button>
+        <button type="submit" class="btn btn-primary" id="btnAuthSubmit">
+          🚀 Tải Dữ Liệu Ngay
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  Jira Smart Analytics Pro • Hệ thống hỗ trợ quản lý Billable Hours và Nhiệm Vụ Đang Làm
+</footer>
+
+<script>
+  // Global State
+  let appState = {
+    user: null,
+    domain: 'https://jira.yourcompany.com',
+    token: '',
+    billableItems: [],
+    workingTasks: []
+  };
+
+  // Switch Tab
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Modal Controls
+  function openLoginModal() {
+    document.getElementById('loginModal').classList.add('active');
+  }
+  function closeLoginModal() {
+    document.getElementById('loginModal').classList.remove('active');
+  }
+
+  // Initialize
+  async function init() {
+    const savedToken = localStorage.getItem('jira_token');
+    const savedDomain = localStorage.getItem('jira_domain') || 'https://jira.yourcompany.com';
+
+    document.getElementById('inputDomain').value = savedDomain;
+    if (savedToken) {
+      document.getElementById('inputToken').value = savedToken;
+      appState.token = savedToken;
+      appState.domain = savedDomain;
+    }
+
+    // Try to load cached data first for instant display
+    try {
+      const cacheRes = await fetch('initial_cache.json');
+      if (cacheRes.ok) {
+        const cacheData = await cacheRes.json();
+        processLoadedData(cacheData);
+      }
+    } catch (e) {
+      console.warn('Initial cache not found, waiting for auth.');
+    }
+
+    // If token exists, trigger background refresh
+    if (appState.token) {
+      syncLiveJiraData();
+    }
+  }
+
+  // Load from auth.json
+  async function loadDefaultConfigFile() {
+    try {
+      const res = await fetch('../auth.json');
+      if (res.ok) {
+        const config = await res.json();
+        if (config.token) {
+          document.getElementById('inputToken').value = config.token;
+          document.getElementById('inputDomain').value = config.domain || 'https://jira.yourcompany.com';
+        }
+      }
+    } catch (e) {
+      alert('Không tìm thấy auth.json ở thư mục gốc');
+    }
+  }
+
+  // Handle Login / Token Submit
+  async function handleAuthSubmit(e) {
+    e.preventDefault();
+    const token = document.getElementById('inputToken').value.trim();
+    const domain = document.getElementById('inputDomain').value.trim().replace(/\/+$/, '');
+
+    if (!token) return alert('Vui lòng nhập Token!');
+
+    appState.token = token;
+    appState.domain = domain;
+    localStorage.setItem('jira_token', token);
+    localStorage.setItem('jira_domain', domain);
+
+    closeLoginModal();
+    await syncLiveJiraData();
+  }
+
+  // Live Sync with Jira API (via local proxy or direct)
+  async function syncLiveJiraData() {
+    if (!appState.token) {
+      openLoginModal();
+      return;
+    }
+
+    const btn = document.getElementById('btnAuthSubmit');
+    if (btn) btn.innerText = '⏳ Đang tải...';
+
+    try {
+      const headers = {
+        'Authorization': `Bearer ${appState.token}`,
+        'Accept': 'application/json',
+        'X-Jira-Domain': appState.domain
+      };
+
+      // 1. Get user profile
+      const userRes = await fetch('/api/jira/rest/api/2/myself', { headers }).catch(() => 
+        fetch(`${appState.domain}/rest/api/2/myself`, { headers: { 'Authorization': `Bearer ${appState.token}` } })
+      );
+      const user = await userRes.json();
+
+      // 2. Get active working tasks
+      const workingJql = encodeURIComponent(`assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC`);
+      const workingRes = await fetch(`/api/jira/rest/api/2/search?jql=${workingJql}&maxResults=100&fields=key,summary,project,status,priority,duedate,customfield_10402,customfield_12200,updated,created`, { headers }).catch(() =>
+        fetch(`${appState.domain}/rest/api/2/search?jql=${workingJql}&maxResults=100&fields=key,summary,project,status,priority,duedate,customfield_10402,customfield_12200,updated,created`, { headers: { 'Authorization': `Bearer ${appState.token}` } })
+      );
+      const workingData = await workingRes.json();
+
+      // 3. Get billable & worklog issues
+      const billableJql = encodeURIComponent(`"Asigned Bill To" = currentUser() OR ("Billable Hrs" > 0 AND worklogAuthor = currentUser()) OR worklogAuthor = currentUser()`);
+      let allIssues = [];
+      let startAt = 0;
+      while (true) {
+        const bRes = await fetch(`/api/jira/rest/api/2/search?jql=${billableJql}&startAt=${startAt}&maxResults=100&fields=key,summary,project,timespent,status,issuetype,customfield_12200,customfield_13000,customfield_13100,customfield_10402,updated`, { headers }).catch(() =>
+          fetch(`${appState.domain}/rest/api/2/search?jql=${billableJql}&startAt=${startAt}&maxResults=100&fields=key,summary,project,timespent,status,issuetype,customfield_12200,customfield_13000,customfield_13100,customfield_10402,updated`, { headers: { 'Authorization': `Bearer ${appState.token}` } })
+        );
+        const bData = await bRes.json();
+        allIssues = allIssues.concat(bData.issues || []);
+        if (startAt + 100 >= (bData.total || 0) || !bData.issues) break;
+        startAt += 100;
+      }
+
+      processLoadedData({
+        user,
+        domain: appState.domain,
+        workingTasks: workingData.issues || [],
+        allIssues
+      });
+
+    } catch (err) {
+      console.error('Failed to sync live data:', err);
+      alert('Không thể kết nối trực tiếp đến Jira API: ' + err.message + '\nNếu mở trực tiếp file://, hãy khởi động server bằng lệnh: node views/server.js');
+    } finally {
+      if (btn) btn.innerText = '🚀 Tải Dữ Liệu Ngay';
+    }
+  }
+
+  // Process & Transform Data
+  function processLoadedData(data) {
+    appState.user = data.user;
+    appState.domain = data.domain || appState.domain;
+    appState.workingTasks = data.workingTasks || [];
+
+    // Header Profile
+    if (data.user) {
+      document.getElementById('userDisplayName').innerText = data.user.displayName || data.user.name;
+      document.getElementById('userAvatarText').innerText = (data.user.displayName || 'U').charAt(0).toUpperCase();
+      document.getElementById('userDomainText').innerText = appState.domain.replace('https://', '').replace('http://', '');
+    }
+
+    // Transform Billable List
+    const userKey = data.user?.name;
+    const rawIssues = data.allIssues || [];
+
+    appState.billableItems = rawIssues.map(issue => {
+      const billableHrs = Number(issue.fields?.customfield_12200) || 0;
+      const assignedBillToObj = issue.fields?.customfield_13000;
+      const isAssignedToUser = assignedBillToObj && (
+        assignedBillToObj.name === userKey ||
+        assignedBillToObj.displayName === data.user?.displayName ||
+        assignedBillToObj.key === data.user?.key
+      );
+      const billedDate = issue.fields?.customfield_13100 || '';
+      const billedMonth = billedDate ? billedDate.substring(0, 7) : 'Chưa gắn kỳ';
+      const billedYear = billedDate ? billedDate.substring(0, 4) : 'Khác';
+      const loggedHours = Math.round(((issue.fields?.timespent || 0) / 3600) * 100) / 100;
+      const project = issue.fields?.project || {};
+
+      return {
+        key: issue.key,
+        summary: issue.fields?.summary || '',
+        projectName: project.name || project.key || 'Khác',
+        projectKey: project.key || 'OTHER',
+        status: issue.fields?.status?.name || 'Open',
+        billableHrs: Math.round(billableHrs * 100) / 100,
+        assignedBillTo: assignedBillToObj?.displayName || (isAssignedToUser ? data.user?.displayName : 'Chưa gán'),
+        isAssignedToMe: !!isAssignedToUser,
+        billedDate,
+        billedMonth,
+        billedYear,
+        loggedHours
+      };
+    });
+
+    // Populate Filters
+    populateFilterDropdowns();
+
+    // Render Tab 1 (Analytics) & Tab 2 (Working Tasks)
+    applyAnalyticsFilters();
+    renderWorkingTasks();
+  }
+
+  // Populate Dropdowns
+  function populateFilterDropdowns() {
+    // Months
+    const monthSelect = document.getElementById('filterMonth');
+    const months = [...new Set(appState.billableItems.map(i => i.billedMonth).filter(Boolean))].sort().reverse();
+    monthSelect.innerHTML = '<option value="ALL">Tất cả các kỳ</option>' + 
+      months.map(m => `<option value="${m}" ${m === '2026-08' ? 'selected' : ''}>Kỳ ${m}</option>`).join('');
+
+    // Projects
+    const projectSelect = document.getElementById('filterProject');
+    const workingProjectSelect = document.getElementById('workingFilterProject');
+    const projects = [...new Set(appState.billableItems.map(i => i.projectName))].sort();
+
+    const projOpts = '<option value="ALL">Tất cả dự án</option>' + 
+      projects.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join('');
+
+    projectSelect.innerHTML = projOpts;
+    workingProjectSelect.innerHTML = projOpts;
+  }
+
+  // Filter & Render Analytics Tab
+  function applyAnalyticsFilters() {
+    const year = document.getElementById('filterYear').value;
+    const month = document.getElementById('filterMonth').value;
+    const project = document.getElementById('filterProject').value;
+    const search = document.getElementById('filterSearch').value.toLowerCase().trim();
+
+    const filtered = appState.billableItems.filter(item => {
+      const matchYear = year === 'ALL' || item.billedYear === year;
+      const matchMonth = month === 'ALL' || item.billedMonth === month;
+      const matchProject = project === 'ALL' || item.projectName === project;
+      const matchSearch = !search || 
+        item.key.toLowerCase().includes(search) ||
+        item.summary.toLowerCase().includes(search) ||
+        item.projectName.toLowerCase().includes(search);
+
+      return matchYear && matchMonth && matchProject && matchSearch;
+    });
+
+    // Stats Calculation
+    const totalBillable = filtered.reduce((acc, i) => acc + i.billableHrs, 0);
+    const totalLogged = filtered.reduce((acc, i) => acc + i.loggedHours, 0);
+    const delta = totalBillable - totalLogged;
+    const uniqueProjects = new Set(filtered.map(i => i.projectKey)).size;
+
+    document.getElementById('statTotalBillable').innerText = (Math.round(totalBillable * 10) / 10).toLocaleString();
+    document.getElementById('statTotalLogged').innerText = (Math.round(totalLogged * 10) / 10).toLocaleString();
+    document.getElementById('statDeltaValue').innerText = (delta > 0 ? '+' : '') + (Math.round(delta * 10) / 10).toLocaleString();
+    document.getElementById('statTaskCount').innerText = filtered.length;
+    document.getElementById('statProjectCount').innerText = uniqueProjects;
+
+    const effRate = totalLogged > 0 ? Math.round((totalBillable / totalLogged) * 100) : 100;
+    document.getElementById('statEfficiencyRate').innerHTML = `<span>Tỷ lệ Billable / Actual: <b>${effRate}%</b></span>`;
+
+    // Render Table
+    renderBillableTable(filtered);
+
+    // Render Sidebar Breakdowns
+    renderProjectBreakdown(filtered, totalBillable);
+    renderMonthlyBreakdown(filtered);
+  }
+
+  // Render Table
+  function renderBillableTable(items) {
+    const tbody = document.getElementById('billableTableBody');
+    document.getElementById('tableResultCount').innerText = `${items.length} kết quả`;
+
+    if (items.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2.5rem; color: var(--text-muted)">Không tìm thấy công việc nào phù hợp với bộ lọc.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = items.map(item => `
+      <tr>
+        <td style="white-space: nowrap;">
+          <a href="${appState.domain}/browse/${item.key}" target="_blank" class="badge-ticket">
+            ${item.key}
+          </a>
+        </td>
+        <td>
+          <div style="font-weight: 700; color: var(--navy-dark); margin-bottom: 0.15rem;">${escapeHtml(item.summary)}</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(item.projectName)}</div>
+        </td>
+        <td style="white-space: nowrap; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-secondary);">
+          ${item.billedDate ? `📅 ${item.billedDate}` : '<span style="color: var(--text-dim)">Chưa gán</span>'}
+        </td>
+        <td>
+          <span class="badge-billable">💵 ${item.billableHrs}h</span>
+        </td>
+        <td>
+          <span class="badge-logged">${item.loggedHours}h</span>
+        </td>
+        <td>
+          <span class="badge-status ${getStatusClass(item.status)}">${escapeHtml(item.status)}</span>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // Project Breakdown Bar
+  function renderProjectBreakdown(items, totalBillable) {
+    const container = document.getElementById('projectBreakdownContainer');
+    const projMap = {};
+
+    items.forEach(i => {
+      if (!projMap[i.projectName]) {
+        projMap[i.projectName] = { name: i.projectName, key: i.projectKey, billable: 0, logged: 0, count: 0 };
+      }
+      projMap[i.projectName].billable += i.billableHrs;
+      projMap[i.projectName].logged += i.loggedHours;
+      projMap[i.projectName].count++;
+    });
+
+    const sorted = Object.values(projMap).sort((a, b) => b.billable - a.billable);
+
+    if (sorted.length === 0) {
+      container.innerHTML = '<div style="color: var(--text-muted); text-align: center; font-size: 0.85rem;">Không có dữ liệu</div>';
+      return;
+    }
+
+    container.innerHTML = sorted.map(p => {
+      const percent = totalBillable > 0 ? Math.round((p.billable / totalBillable) * 100) : 0;
+      return `
+        <div class="bar-group">
+          <div class="bar-label-row">
+            <span style="font-weight: 700; color: var(--navy-dark);">${escapeHtml(p.name)}</span>
+            <span style="color: var(--emerald-text); font-family: 'JetBrains Mono', monospace;">${Math.round(p.billable * 10) / 10}h (${percent}%)</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill-billable" style="width: ${percent}%"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">
+            <span>${p.count} tasks</span>
+            <span>Logged: ${Math.round(p.logged * 10) / 10}h</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Monthly Breakdown Bar
+  function renderMonthlyBreakdown(items) {
+    const container = document.getElementById('monthlyTrendsContainer');
+    const monthMap = {};
+
+    items.forEach(i => {
+      const m = i.billedMonth || 'Chưa gắn kỳ';
+      if (!monthMap[m]) monthMap[m] = { month: m, billable: 0, logged: 0, count: 0 };
+      monthMap[m].billable += i.billableHrs;
+      monthMap[m].logged += i.loggedHours;
+      monthMap[m].count++;
+    });
+
+    const sorted = Object.values(monthMap).sort((a, b) => b.month.localeCompare(a.month));
+
+    if (sorted.length === 0) {
+      container.innerHTML = '<div style="color: var(--text-muted); text-align: center; font-size: 0.85rem;">Không có dữ liệu</div>';
+      return;
+    }
+
+    const maxBillable = Math.max(...sorted.map(m => m.billable), 1);
+
+    container.innerHTML = sorted.map(m => {
+      const barWidth = Math.round((m.billable / maxBillable) * 100);
+      return `
+        <div class="bar-group">
+          <div class="bar-label-row">
+            <span style="font-weight: 700; color: var(--navy-dark);">Kỳ ${escapeHtml(m.month)}</span>
+            <span style="color: var(--emerald-text); font-family: 'JetBrains Mono', monospace;">${Math.round(m.billable * 10) / 10}h Billable</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill-billable" style="width: ${barWidth}%"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">
+            <span>${m.count} tasks</span>
+            <span>Logged: ${Math.round(m.logged * 10) / 10}h</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Render Tab 2: Working Tasks
+  function renderWorkingTasks() {
+    const tasks = appState.workingTasks || [];
+    document.getElementById('navWorkingCount').innerText = tasks.length;
+    document.getElementById('activeTasksCountBadge').innerText = `${tasks.length} Task đang xử lý`;
+    applyWorkingFilters();
+  }
+
+  function applyWorkingFilters() {
+    const project = document.getElementById('workingFilterProject').value;
+    const status = document.getElementById('workingFilterStatus').value;
+    const search = document.getElementById('workingFilterSearch').value.toLowerCase().trim();
+
+    const filtered = (appState.workingTasks || []).filter(task => {
+      const projName = task.fields?.project?.name || '';
+      const statName = task.fields?.status?.name || '';
+      const summary = task.fields?.summary || '';
+      const key = task.key || '';
+
+      const matchProject = project === 'ALL' || projName === project;
+      const matchStatus = status === 'ALL' || statName.toLowerCase().includes(status.toLowerCase());
+      const matchSearch = !search || key.toLowerCase().includes(search) || summary.toLowerCase().includes(search);
+
+      return matchProject && matchStatus && matchSearch;
+    });
+
+    const grid = document.getElementById('workingTasksGrid');
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted); background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md);">Không có task nào phù hợp với bộ lọc hiện tại.</div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(task => {
+      const key = task.key;
+      const summary = task.fields?.summary || '(Không có tiêu đề)';
+      const project = task.fields?.project?.name || 'Khác';
+      const status = task.fields?.status?.name || 'Open';
+      const priority = task.fields?.priority?.name || 'Medium';
+      const billableHrs = task.fields?.customfield_12200;
+      const leaderEst = task.fields?.customfield_10402;
+      const duedate = task.fields?.duedate;
+      const updated = task.fields?.updated ? task.fields.updated.substring(0, 10) : '';
+
+      return `
+        <div class="task-item-card">
+          <div>
+            <div class="task-card-top">
+              <a href="${appState.domain}/browse/${key}" target="_blank" class="badge-ticket">${key}</a>
+              <span class="badge-status ${getStatusClass(status)}">${escapeHtml(status)}</span>
+            </div>
+            <div class="task-card-title">${escapeHtml(summary)}</div>
+            <div class="task-card-project">📁 ${escapeHtml(project)}</div>
+          </div>
+
+          <div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+              <span class="badge-priority ${getPriorityClass(priority)}">⚡ ${escapeHtml(priority)}</span>
+              ${billableHrs != null && billableHrs > 0 ? `<span class="badge-billable">💵 ${billableHrs}h</span>` : ''}
+              ${leaderEst != null && leaderEst > 0 ? `<span class="badge-logged">Est: ${leaderEst}h</span>` : ''}
+            </div>
+
+            <div class="task-card-footer">
+              <span>Cập nhật: ${updated}</span>
+              ${duedate ? `<span style="color: var(--rose-accent); font-weight: 600;">Hạn: ${duedate}</span>` : '<span style="color: var(--text-dim)">Không có hạn</span>'}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Helpers
+  function getStatusClass(status) {
+    const s = (status || '').toLowerCase();
+    if (s.includes('progress')) return 'status-in-progress';
+    if (s.includes('done') || s.includes('closed')) return 'status-done';
+    if (s.includes('resolve')) return 'status-resolved';
+    if (s.includes('review')) return 'status-review';
+    if (s.includes('reopen')) return 'status-reopened';
+    return 'status-open';
+  }
+
+  function getPriorityClass(prio) {
+    const p = (prio || '').toLowerCase();
+    if (p.includes('high') || p.includes('highest') || p.includes('blocker')) return 'prio-high';
+    if (p.includes('low') || p.includes('lowest')) return 'prio-low';
+    return 'prio-medium';
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function exportDataJSON() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState.billableItems, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `billable_report_${appState.user?.name || 'jira'}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  }
+
+  // Auto Init
+  init();
+</script>
+
+</body>
+</html>

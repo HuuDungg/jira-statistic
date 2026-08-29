@@ -1,0 +1,43 @@
+# OS & Editor
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node & Package Managers
+node_modules/
+dist/
+dist-ssr/
+*.local
+.npm
+.yarn/
+.wrangler/
+
+# Sensitive Authentication & Personal Credentials (IGNORE)
+auth.json
+auth.txt
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+
+# Cached Live Data & Personal Log Plans (IGNORE)
+views/initial_cache.json
+views/billable_data.json
+logtim-plan.md
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

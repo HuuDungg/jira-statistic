@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="50%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#e0e7ff"/>
+    </linearGradient>
+    <linearGradient id="primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#cbd5e1" stroke-width="0.75" stroke-opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Glowing shapes -->
+  <circle cx="1050" cy="150" r="300" fill="#38bdf8" fill-opacity="0.12" filter="blur(60px)"/>
+  <circle cx="150" cy="500" r="250" fill="#818cf8" fill-opacity="0.12" filter="blur(60px)"/>
+
+  <!-- Main Card Shape -->
+  <rect x="80" y="80" width="1040" height="470" rx="12" fill="#ffffff" fill-opacity="0.9" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- Logo Icon -->
+  <rect x="140" y="140" width="64" height="64" rx="8" fill="url(#primary)"/>
+  <path d="M162 172 L172 182 L186 162" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Main Title -->
+  <text x="225" y="182" font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" font-size="34" font-weight="800" fill="#0f172a" letter-spacing="-0.5">Jira Analytics Pro</text>
+  <text x="225" y="210" font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="600" fill="#64748b" letter-spacing="1">SMART BILLABLE &amp; TASK HUB</text>
+
+  <!-- Subtitle / Value Prop -->
+  <text x="140" y="290" font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="700" fill="#1e293b">Phân Tích Billable Hours &amp; Quản Lý Nhiệm Vụ Jira Thông Minh</text>
+  <text x="140" y="325" font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="500" fill="#64748b">Trích xuất chính xác Billable Hrs, Billed Date, đối soát Actual Logged và theo dõi tiến độ công việc.</text>
+
+  <!-- Stat Badges Mock -->
+  <rect x="140" y="380" width="230" height="90" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="160" y="415" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700" fill="#64748b" letter-spacing="0.5">BILLABLE HOURS</text>
+  <text x="160" y="450" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="800" fill="#059669">1,377.4h</text>
+
+  <rect x="390" y="380" width="230" height="90" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="410" y="415" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700" fill="#64748b" letter-spacing="0.5">ACTUAL LOGGED</text>
+  <text x="410" y="450" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="800" fill="#1e3a8a">1,329.0h</text>
+
+  <rect x="640" y="380" width="230" height="90" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="660" y="415" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700" fill="#64748b" letter-spacing="0.5">ACTIVE TASKS</text>
+  <text x="660" y="450" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="800" fill="#0284c7">104 Tasks</text>
+
+  <rect x="890" y="380" width="190" height="90" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="910" y="415" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700" fill="#64748b" letter-spacing="0.5">EFFICIENCY</text>
+  <text x="910" y="450" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="800" fill="#7c3aed">100%</text>
+
+  <!-- Footer branding -->
+  <text x="140" y="520" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="600" fill="#94a3b8">Ready for Cloudflare Pages • No Index Active</text>
+</svg>
