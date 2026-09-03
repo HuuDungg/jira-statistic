@@ -1,5 +1,6 @@
 /*
-  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: frame-ancestors 'self' https://hr.onextdigital.com https://*.onextdigital.com https://jira.localgamelab.software http://localhost:*
+  Access-Control-Allow-Origin: *
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
