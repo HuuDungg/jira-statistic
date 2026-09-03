@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
 import { AuthModal } from './components/AuthModal';
 import { TermsModal } from './components/TermsModal';
@@ -11,21 +11,74 @@ import { jiraApi } from './services/jiraApi';
 import { Key, ShieldCheck, ArrowRight, RefreshCw } from 'lucide-react';
 
 const AUTO_SYNC_INTERVAL_SEC = 300; // 5 minutes
+const CACHE_KEY_DATA = 'jira_cache_data_v1';
+const CACHE_KEY_TIME = 'jira_cache_time_v1';
+
+interface CachedData {
+  user: JiraUser | null;
+  billableItems: BillableItem[];
+  workingTasks: WorkingTask[];
+}
+
+/**
+ * Load cached data and compute remaining countdown seconds from localStorage
+ */
+function loadLocalCache(): { data: CachedData | null; remainingSec: number } {
+  try {
+    const timeStr = localStorage.getItem(CACHE_KEY_TIME);
+    const rawData = localStorage.getItem(CACHE_KEY_DATA);
+
+    if (!timeStr || !rawData) {
+      return { data: null, remainingSec: AUTO_SYNC_INTERVAL_SEC };
+    }
+
+    const lastSyncTime = parseInt(timeStr, 10);
+    if (isNaN(lastSyncTime)) {
+      return { data: null, remainingSec: AUTO_SYNC_INTERVAL_SEC };
+    }
+
+    const elapsedSec = Math.floor((Date.now() - lastSyncTime) / 1000);
+    const remainingSec = AUTO_SYNC_INTERVAL_SEC - elapsedSec;
+
+    if (remainingSec > 0) {
+      const data: CachedData = JSON.parse(rawData);
+      return { data, remainingSec };
+    }
+
+    return { data: null, remainingSec: AUTO_SYNC_INTERVAL_SEC };
+  } catch (err) {
+    console.error('Error reading cache:', err);
+    return { data: null, remainingSec: AUTO_SYNC_INTERVAL_SEC };
+  }
+}
+
+/**
+ * Save fresh data and timestamp to localStorage
+ */
+function saveLocalCache(user: JiraUser | null, billableItems: BillableItem[], workingTasks: WorkingTask[]) {
+  try {
+    const cache: CachedData = { user, billableItems, workingTasks };
+    localStorage.setItem(CACHE_KEY_DATA, JSON.stringify(cache));
+    localStorage.setItem(CACHE_KEY_TIME, Date.now().toString());
+  } catch (err) {
+    console.error('Error saving cache:', err);
+  }
+}
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'analytics' | 'logtime' | 'tasks' | 'check'>('analytics');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [countdown, setCountdown] = useState<number>(AUTO_SYNC_INTERVAL_SEC);
 
-  const [domain, setDomain] = useState<string>('');
-  const [token, setToken] = useState<string>('');
-  const [user, setUser] = useState<JiraUser | null>(null);
-  const [billableItems, setBillableItems] = useState<BillableItem[]>([]);
-  const [workingTasks, setWorkingTasks] = useState<WorkingTask[]>([]);
-
-  const countdownRef = useRef<number>(AUTO_SYNC_INTERVAL_SEC);
+  // Initialize state from local cache on startup
+  const initialCache = loadLocalCache();
+  const [countdown, setCountdown] = useState<number>(initialCache.remainingSec);
+  const [domain, setDomain] = useState<string>(() => localStorage.getItem('jira_domain') || '');
+  const [token, setToken] = useState<string>(() => localStorage.getItem('jira_token') || '');
+  const [user, setUser] = useState<JiraUser | null>(initialCache.data?.user || null);
+  const [billableItems, setBillableItems] = useState<BillableItem[]>(initialCache.data?.billableItems || []);
+  const [workingTasks, setWorkingTasks] = useState<WorkingTask[]>(initialCache.data?.workingTasks || []);
 
   // Check Terms acceptance on mount
   useEffect(() => {
@@ -35,7 +88,7 @@ export const App: React.FC = () => {
     }
   }, []);
 
-  // Sync Live Data from Jira API
+  // Sync Live Data from Jira API & update localStorage cache
   const handleLiveSync = useCallback(async () => {
     const currentToken = token || localStorage.getItem('jira_token');
     const currentDomain = domain || localStorage.getItem('jira_domain');
@@ -46,8 +99,6 @@ export const App: React.FC = () => {
     }
 
     setIsLoading(true);
-    setCountdown(AUTO_SYNC_INTERVAL_SEC);
-    countdownRef.current = AUTO_SYNC_INTERVAL_SEC;
 
     jiraApi.setCredentials(currentDomain, currentToken);
 
@@ -64,6 +115,10 @@ export const App: React.FC = () => {
       const billables = await jiraApi.getBillableAndWorklogItems(currentUser);
       setBillableItems(billables);
 
+      // 4. Save to local cache
+      saveLocalCache(currentUser, billables, tasks);
+      setCountdown(AUTO_SYNC_INTERVAL_SEC);
+
     } catch (err: any) {
       console.error('Sync failed:', err);
     } finally {
@@ -71,7 +126,7 @@ export const App: React.FC = () => {
     }
   }, [token, domain]);
 
-  // Initialize ONLY from user's localStorage
+  // Initial load check on mount: If cache is still within countdown interval, DO NOT refetch on F5
   useEffect(() => {
     const savedToken = localStorage.getItem('jira_token');
     const savedDomain = localStorage.getItem('jira_domain');
@@ -80,7 +135,17 @@ export const App: React.FC = () => {
       setToken(savedToken);
       setDomain(savedDomain);
       jiraApi.setCredentials(savedDomain, savedToken);
-      handleLiveSync();
+
+      const { data, remainingSec } = loadLocalCache();
+      if (data && remainingSec > 0) {
+        setUser(data.user);
+        setBillableItems(data.billableItems);
+        setWorkingTasks(data.workingTasks);
+        setCountdown(remainingSec);
+      } else {
+        // Cache expired or missing -> fetch fresh
+        handleLiveSync();
+      }
     }
   }, [handleLiveSync]);
 
@@ -107,6 +172,10 @@ export const App: React.FC = () => {
     setToken(newToken);
     localStorage.setItem('jira_token', newToken);
     localStorage.setItem('jira_domain', newDomain);
+
+    // Clear old cache for new credentials
+    localStorage.removeItem(CACHE_KEY_DATA);
+    localStorage.removeItem(CACHE_KEY_TIME);
 
     jiraApi.setCredentials(newDomain, newToken);
     setIsAuthModalOpen(false);
